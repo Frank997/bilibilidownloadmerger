@@ -7,7 +7,9 @@ b站手机离线视频合并
 
 使用方法(命令格式)：
 mergeBiliDown.exe <b站离线下载文件夹所在路径> <输出目录>
+
 示例：mergeBiliDown.exe D:/bilibili/download D:/bilibiliOut
+
 输出文件名格式：视频名称_bvid_avid_下载时间戳.mp4
 
 依赖：
