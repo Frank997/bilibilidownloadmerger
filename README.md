@@ -22,13 +22,14 @@ ffmpeg.exe。
 注：mergeBiliDown会尝试从当前目录和环境变量PATH中查找ffmpeg.exe，若两者同时存在，优先当前目录
 
 
-操作步骤：
+### 操作步骤：
+```
 - 拷贝b站离线下载视频目录到电脑。(b站离线下载文件夹位置：存储空间/Android/tv.danmaku.bili/download)
 - 下载ffmpeg：https://ffmpeg.org/download.html#build-windows
 - 下载本程序可执行文件：https://github.com/Frank997/bilibilidownloadmerger/releases
 - 按照上面的使用方法执行程序
-
-程序执行时无输出，请耐心等待，执行完毕后会打印处理成功数目和失败数目，若有错误，请拷贝程序输出，自行检查或发issue
+```
+注：程序执行时无输出，请耐心等待，执行完毕后会打印处理成功数目和失败数目，若有错误，请拷贝程序输出，自行检查或发issue
 
 
 构建：
