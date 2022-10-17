@@ -1,4 +1,4 @@
-# b站离线下载合并器 —— bilibilidownloadmerger
+# b站客户端离线缓存合并器 —— bilibilidownloadmerger
 
 
 简述：本应用可将b站离线下载的audio.m4s和video.m4s合并为mp4文件
