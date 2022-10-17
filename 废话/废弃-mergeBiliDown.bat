@@ -10,7 +10,7 @@ rem 创建输出目录
 rem md %2
 
 rem 遍历目录，找出所有video.m4s文件
-for /r E:\tmp-winscp-trans-20220811\bilidownload %%I in (*video.m4s) do (
+for /r D:/bilibili/download %%I in (*video.m4s) do (
     rem echo %%I
     echo "中文"
     rem set video=%%I
