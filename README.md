@@ -18,5 +18,5 @@ ffmpeg.exe。
 <br>
 输出文件名格式：视频名称_bvid_avid_下载时间戳.mp4
 <br>
-TODO:
-代码还没写，先挖个坑
+构建：
+go build mergeBiliDown.go
