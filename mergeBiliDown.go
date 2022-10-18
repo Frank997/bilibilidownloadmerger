@@ -12,13 +12,17 @@ import (
 
 var count = 0
 
-// TODO 如果所有entry.json键排序固定的话，可以改成一个正则，一次匹配出这几个元素
-var regexDownTitle = regexp.MustCompile(`^.*"download_subtitle":"([^",]*)[,"].*$`) //优先选这个名字，因为这个名字更长
-var regexTitle = regexp.MustCompile(`^.*"title":"([^",]*)[,"].*$`)                 //[^",] 作用是匹配不包含引号和逗号的所有字符
-var regexBvid = regexp.MustCompile(`^.*"bvid":"([^",]*)[,"].*$`)
-var regexAvid = regexp.MustCompile(`^.*"avid":([^",]*)[,"].*$`)                  //avid 是数字，不需要引号
-var regexDownTime = regexp.MustCompile(`^.*"time_create_stamp":([^",]*)[,"].*$`) //视频下载时间戳，单位为毫秒
-var regexReplaceWindowsIllegalChars = regexp.MustCompile(`[/\\:\*\?"<>\|]`)      //非法windows文件名
+/*
+for test:
+{"media_type":2,"has_dash_audio":true,"is_completed":true,"total_bytes":52729671,"downloaded_bytes":52729671,"title":"中国地{}/g\a:*dd?d<>|下社会：从帮会到黑社会","type_tag":"16","cover":"http:\/\/i0.hdslb.com\/bfs\/archive\/3a285ccd3a0fa7ae635092e5d244f33fce5c18e3.jpg","video_quality":16,"prefered_video_quality":32,"guessed_total_bytes":0,"total_time_milli":2830253,"danmaku_count":1,"time_update_stamp":1655886599410,"time_create_stamp":1655886566865,"can_play_in_advance":true,"interrupt_transform_temp_file":false,"quality_pithy_description":"360P","quality_superscript":"","cache_version_code":6670300,"preferred_audio_quality":0,"audio_quality":0,"avid":854530221,"spid":0,"seasion_id":0,"bvid":"BV1y54y1o78F","owner_id":20123316,"owner_name":"WithEric","owner_avatar":"http:\/\/i0.hdslb.com\/bfs\/face\/0d371a6c43173a291e6deb4cf3ffc272dace60b2.jpg","page_data":{"cid":734454294,"page":5,"from":"vupload","part":"中国地下社会三百年","link":"","vid":"","has_alias":false,"tid":228,"width":400,"height":300,"rotate":0,"download_title":"视频已缓存完成","download_subtitle":"中国地下社会：从帮/g\a:*dd?d"<>|会到黑社会 中国地下社会三百年"}}
+*/
+// TODO 如果所有entry.json键排序固定的话，可以改成一个正则，一次匹配出这几个元素，但如果性能不是问题，分别匹配更保险，即使entry.json里键排序不固定也不会出错
+var regexDownTitle = regexp.MustCompile(`^.*"download_subtitle":"([^"]*)["].*$`) //优先选这个名字，因为这个名字更长
+var regexTitle = regexp.MustCompile(`^.*"title":"([^"]*)["].*$`)                 //[^",] 作用是匹配不包含引号和逗号的所有字符
+var regexBvid = regexp.MustCompile(`^.*"bvid":"([^,"}]*)[,"}].*$`)
+var regexAvid = regexp.MustCompile(`^.*"avid":([^,"}]*)[,"}].*$`)                  //avid 是数字，其实不需要引号
+var regexDownTime = regexp.MustCompile(`^.*"time_create_stamp":([^,"}]*)[,"}].*$`) //视频下载时间戳，单位为毫秒
+var regexReplaceWindowsIllegalChars = regexp.MustCompile(`[/\\:\*\?"<>\|]`)        //非法windows文件名
 
 func main() {
 	//如果参数数量不符预期，输出命令格式，若传参多，忽略多余参数
@@ -102,6 +106,7 @@ func getVidName(entryPath string) string {
 	}
 	contentStr := string(content)
 	// get video title
+	// first, try get download title, if nil, get the title. btw: download title has a detail name of the video, such as: videoName partName, but the title only has videoName
 	match := regexDownTitle.FindStringSubmatch(contentStr)
 	if len(match) < 2 {
 		match = regexTitle.FindStringSubmatch(contentStr)
@@ -116,7 +121,7 @@ func getVidName(entryPath string) string {
 	//get avid
 	match = regexAvid.FindStringSubmatch(contentStr)
 	avid := match[1]
-	//get download timestamp
+	//get download timestamp. side effect is make the videoname unique, so need't gen a random for videoName
 	match = regexDownTime.FindStringSubmatch(contentStr)
 	downTime := match[1]
 	//gen filename for output video
@@ -132,6 +137,7 @@ func getVidName(entryPath string) string {
 func merge(ffmpegBin string, audio string, video string, outFile string) bool {
 	isSucceed := true
 	//ffmpeg -i video.m4s -i audio.m4s -codec copy -n Output.mp4
+	// flag "-n" make "no" for override same-name files ask
 	cmd := exec.Command(ffmpegBin, "-i", audio, "-i", video, "-codec", "copy", "-n", outFile)
 	out, err := cmd.CombinedOutput() //out 为命令输出，发生错误时输出，平时不用输
 	if err != nil {                  //发生错误，打印命令输出并返回false给调用者
