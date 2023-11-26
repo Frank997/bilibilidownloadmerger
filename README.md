@@ -13,7 +13,7 @@ mergeBiliDown.exe <b站离线下载文件夹所在路径> <输出目录>
 ```
 mergeBiliDown.exe D:/bilibili/download D:/bilibiliOut
 ```
-输出文件名格式：视频名称_bvid_avid_下载时间戳.mp4
+输出格式：视频名称_bvid_avid/视频分p名_下载时间戳.mp4
 
 依赖：
 ffmpeg.exe。
@@ -27,9 +27,9 @@ ffmpeg.exe。
 - 拷贝b站离线下载视频目录到电脑。(b站安卓app离线缓存文件夹位置：存储空间/Android/tv.danmaku.bili/download)
 - 下载ffmpeg：https://ffmpeg.org/download.html#build-windows
 - 下载本程序可执行文件：https://github.com/Frank997/bilibilidownloadmerger/releases
-- 按照上面的使用方法执行程序
+- 打开powershell，定位到程序所在目录，执行：mergeBiliDown.exe <b站离线下载文件夹所在路径> <输出目录>
 ```
-注：程序执行时无输出，请耐心等待，执行完毕后会打印处理成功数目和失败数目，若有错误，请拷贝程序输出，自行检查或发issue
+注：程序执行时间取决于视频数量，请耐心等待，执行完毕后会打印处理成功数和失败数，若有错误，请拷贝程序输出，自行检查或发issue
 
 
 构建：
